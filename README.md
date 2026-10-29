@@ -10,9 +10,7 @@ Antes do Sistema Operacional: o Papel do Firmware
 202301481 - Pedro Henrique dos Santos Pereira  
 
 ## Apresentações
-1. Link para a primeira apresentação (canva, google slides, etc.) <br>
-2. Link para a segunda apresentação (canva, google slides, etc.) <br>
-...
+1. Introdução: https://canva.link/477vgbepkuj0uq8
 
 ## Resumo
 - O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional. O UEFI, que substituiu a BIOS, oferece inicialização modular, serviços de runtime e o Secure Boot. Por rodar com privilégios elevados antes das proteções do SO, o firmware tornou-se alvo de ameaças persistentes.
