@@ -1,7 +1,7 @@
 # INF0336 - Seminário
 
 ## Título do Seminário
-Antes do Sistema Operacional: o Papel do Firmware
+Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 
 ## Equipe:
 202301433 - Eduardo Civitate Peuvrie Sigilião  
@@ -45,7 +45,7 @@ No caso do LogoFAIL, a Binarly [5] descreveu um conjunto de vulnerabilidades em 
 
 **Modelos:** como não há modelo preditivo, esta seção descreve o ambiente experimental:
 
-- Virtualização: QEMU com firmware OVMF (implementação open source de UEFI), permitindo testar Secure Boot em uma máquina virtual sem expor hardware físico a riscos. Snapshots da VM isolam o estado antes e depois do ataque.
+- Virtualização: QEMU/KVM com firmware OVMF (implementação open source de UEFI), permitindo testar Secure Boot em uma máquina virtual sem expor hardware físico a riscos. Snapshots da VM isolam o estado antes e depois do ataque.
 - Ferramentas de inspeção: CHIPSEC, framework para análise de segurança de plataformas PC (BIOS/UEFI) mantido atualmente pelo repositório chipsec/chipsec, usado para consultar variáveis Secure Boot e rodar módulos de teste de segurança. UEFITool, para inspecionar a imagem de firmware.
 - Prova de conceito: reprodução de um exploit documentado publicamente (LogoFAIL ou BlackLotus, a decidir), sem desenvolvimento de exploit próprio nem uso contra sistemas de terceiros.
 - Documentação: registro de comandos, capturas de tela e logs em um repositório do trabalho, para permitir a reprodução dos resultados.
