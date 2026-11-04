@@ -15,7 +15,7 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 
 ## Resumo
 - O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional. O UEFI, que substituiu a BIOS, oferece inicialização modular, serviços de runtime e o Secure Boot. Por rodar com privilégios elevados antes das proteções do SO, o firmware tornou-se alvo de ameaças persistentes.
-- Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot. São analisadas as interfaces entre firmware e SO, como serviços de runtime, variáveis NVRAM e SMM. Uma demonstração prática, em ambiente controlado, explora uma vulnerabilidade conhecida, como LogoFail ou BlackLotus, a partir de um sistema em execução.
+- Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot. São analisadas as interfaces entre firmware e SO, como serviços de runtime, variáveis NVRAM e SMM. Uma demonstração prática, em ambiente controlado, explora uma vulnerabilidade conhecida (LogoFAIL) a partir de um sistema em execução.
 - Busca-se evidenciar como o firmware influencia a segurança e o funcionamento do sistema operacional. A demonstração deve mostrar que falhas em componentes do firmware permitem contornar o Secure Boot e obter persistência. Discutem-se, ainda, mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM.
 - A segurança do sistema operacional depende da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
 
