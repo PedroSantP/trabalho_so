@@ -34,7 +34,7 @@ No caso do LogoFAIL, a Binarly [5] descreveu um conjunto de vulnerabilidades em 
 
 - Descrever a arquitetura do UEFI, suas fases de inicialização e o funcionamento da cadeia de confiança do Secure Boot (PK, KEK, db e dbx).
 - Mapear as interfaces entre firmware e SO, como serviços de runtime, variáveis NVRAM, ACPI e SMM.
-- Reproduzir, em ambiente controlado, uma vulnerabilidade conhecida de firmware ou de boot (LogoFAIL ou BlackLotus) a partir de um sistema em execução.
+- Reproduzir, em ambiente controlado, uma vulnerabilidade conhecida de firmware (LogoFAIL) a partir de um sistema em execução.
 - Discutir mitigações (atualização de firmware, revogação via DBX, boot medido com TPM) e suas limitações.
 
 ## Metodologia
