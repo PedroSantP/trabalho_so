@@ -80,7 +80,7 @@ Em que medida os objetivos foram alcançados?
 ## Referências
 BASHUN, V. et al. Threat Analysis of EFI System Firmware. In: IEEE CONFERENCE ON COMMUNICATIONS AND NETWORK SECURITY (CNS), 2013, Washington, DC. Proceedings... IEEE, 2013.
 
-SURVE, S. et al. SoK: Systematization of Knowledge on UEFI Security. arXiv preprint arXiv:2404.14856, 2024.
+SURVE, P. P. et al. SoK: Security Below the OS – A Security Analysis of UEFI. arXiv preprint arXiv:2311.03809, 2023. Disponível em: https://arxiv.org/abs/2311.03809. Acesso em: 4 nov. 2026.
 
 ESET. LoJax: First UEFI rootkit found in the wild, courtesy of the Sednit group. [S. l.]: WeLiveSecurity, 2018. Disponível em: https://www.welivesecurity.com/2018/09/27/lojax-first-uefi-rootkit-found-wild-courtesy-sednit-group/. Acesso em: 4 nov. 2026.
 
