@@ -78,15 +78,15 @@ Os casos documentados pela indústria ilustram categorias distintas de ameaça, 
 Em que medida os objetivos foram alcançados?
 
 ## Referências
-BASHUN, V. et al. Threat Analysis of EFI System Firmware. In: IEEE CONFERENCE ON COMMUNICATIONS AND NETWORK SECURITY (CNS), 2013, Washington, DC. Proceedings... IEEE, 2013. p. 347-355.
+BASHUN, V. et al. Threat Analysis of EFI System Firmware. In: IEEE CONFERENCE ON COMMUNICATIONS AND NETWORK SECURITY (CNS), 2013, Washington, DC. Proceedings... IEEE, 2013.
 
 SURVE, S. et al. SoK: Systematization of Knowledge on UEFI Security. arXiv preprint arXiv:2404.14856, 2024.
 
-LEVEILLE, J.-I. LoJax: First UEFI rootkit used in the wild, discovered by ESET. Bratislava: ESET Research, 2018. Disponível em: https://www.welivesecurity.com. Acesso em: 28 out. 2026.
+ESET. LoJax: First UEFI rootkit found in the wild, courtesy of the Sednit group. [S. l.]: WeLiveSecurity, 2018. Disponível em: https://www.welivesecurity.com/2018/09/27/lojax-first-uefi-rootkit-found-wild-courtesy-sednit-group/. Acesso em: 4 nov. 2026.
 
-BOUTIN, M. BlackLotus UEFI bootkit: Myth confirmed. Bratislava: ESET Research, 2023. Disponível em: https://www.welivesecurity.com. Acesso em: 28 out. 2026.
+ESET. BlackLotus UEFI bootkit: Myth confirmed. [S. l.]: WeLiveSecurity, 2023. Disponível em: https://www.welivesecurity.com/2023/03/01/blacklotus-uefi-bootkit-myth-confirmed/. Acesso em: 4 nov. 2026.
 
-BINARLY. LogoFAIL: Security Flaws in UEFI Image Parsers. Los Angeles: Binarly Research, 2023. Disponível em: https://binarly.io/posts/logofail_security_flaws_in_uefi_image_parsers. Acesso em: 28 out. 2026.
+BINARLY. LogoFAIL. [S. l.]: Binarly, 2023. Disponível em: https://www.binarly.io/reports/logofail. Acesso em: 4 nov. 2026.
 
 MATROSOV, A.; PAGANI, F. A Census of Signed UEFI Modules and Attack Taxonomy on Secure Boot. Cybersecurity Research, 2025.
 
