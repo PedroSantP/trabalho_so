@@ -14,10 +14,7 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 2. Arquitetura UEFI: https://canva.link/cmhjl7a7nr4lkny
 
 ## Resumo
-- O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional. O UEFI, que substituiu a BIOS, oferece inicialização modular, serviços de runtime e o Secure Boot. Por rodar com privilégios elevados antes das proteções do SO, o firmware tornou-se alvo de ameaças persistentes.
-- Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot. São analisadas as interfaces entre firmware e SO, como serviços de runtime, variáveis NVRAM e SMM. Uma demonstração prática, em ambiente controlado, explora uma vulnerabilidade conhecida (LogoFAIL) a partir de um sistema em execução.
-- Busca-se evidenciar como o firmware influencia a segurança e o funcionamento do sistema operacional. A demonstração deve mostrar que falhas em componentes do firmware permitem contornar o Secure Boot e obter persistência. Discutem-se, ainda, mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM.
-- A segurança do sistema operacional depende da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
+O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional; no caso do UEFI, que substituiu a BIOS tradicional, essa camada passou a oferecer inicialização modular, serviços de runtime e mecanismos de segurança como o Secure Boot, mas também se tornou alvo de ameaças persistentes por rodar com privilégios elevados antes das proteções do SO. Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot, analisando as interfaces entre firmware e SO (serviços de runtime, variáveis NVRAM e SMM) e demonstrando, em ambiente controlado, uma vulnerabilidade da classe LogoFAIL replicada por meio de engenharia reversa e vulnerability injection, com o objetivo de evidenciar como falhas no firmware permitem contornar o Secure Boot e obter persistência, discutindo-se ainda mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM. A segurança do sistema operacional depende, portanto, da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
 
 ## Introdução
 **Motivação:** Sistemas operacionais costumam ser tratados como a camada fundamental de software de um computador, responsável por gerenciar processos, memória e dispositivos. Esse modelo omite o fato de que, antes da execução do primeiro código do kernel, o hardware já foi inicializado e configurado por outro software: o firmware. Nos computadores modernos, esse papel é desempenhado pelo UEFI (Unified Extensible Firmware Interface), que substituiu a BIOS tradicional e passou a oferecer inicialização modular, serviços de runtime e mecanismos de segurança como o Secure Boot, projetado para manter uma cadeia de confiança entre o firmware e o sistema operacional [1][2]. 
@@ -52,9 +49,20 @@ No caso do LogoFAIL, a Binarly [5] descreveu um conjunto de vulnerabilidades em 
 - Documentação: registro de comandos, capturas de tela e logs em um repositório do trabalho, para permitir a reprodução dos resultados.
 Métricas
 
-**Qualitativas:** clareza da explicação da arquitetura UEFI e da cadeia de confiança do Secure Boot; capacidade de relacionar a vulnerabilidade demonstrada com o mecanismo específico do Secure Boot que ela contorna.
+**Qualitativas:**: clareza da explicação da arquitetura UEFI e da cadeia de confiança do Secure Boot; capacidade de relacionar cada vetor de ataque pré-BDS ao mecanismo específico do Secure Boot que ele contorna; fidelidade da vulnerabilidade replicada em relação à causa raiz da classe LogoFAIL original.
 
-**Quantitativas:** Status do Secure Boot (ativo/contornado) antes e depois da exploração, verificado via CHIPSEC ou variáveis UEFI; presença ou ausência do binário vulnerável na lista de revogação (DBX); número de verificações de integridade do CHIPSEC que passam antes do ataque e que falham depois.
+**Quantitativas:**: status do Secure Boot (ativo/contornado) antes e depois da exploração, verificado via CHIPSEC ou variáveis UEFI; número de entradas em PK, KEK, db e dbx, e se houve alteração durante o ataque; número de verificações de integridade do CHIPSEC que passam antes do ataque e que falham depois; número de vetores pré-BDS mapeados por fase de boot (PEI/DXE).
+
+**Limitações**: 
+- Virtualização (OVMF) não reproduz fielmente hardware real: SPI flash, SMM completo e alguns periféricos são simplificados ou ausentes no QEMU.
+- TPM é emulado via swtpm, então resultados de boot medido não refletem variações de hardware real (ex.: diferenças entre fabricantes de TPM).
+- A vulnerabilidade demonstrada é uma réplica da classe LogoFAIL, não o módulo vulnerável original — os resultados caracterizam o padrão de       falha, não uma CVE específica.
+- Escopo limitado a um fornecedor de código de referência (via OVMF/EDK II); não generaliza automaticamente para AMI, Insyde ou Phoenix.
+
+**Considerações Éticas**: 
+- Toda exploração ocorre em VM isolada, sem conexão com sistemas de produção ou de terceiros.
+- Nenhum exploit ou binário vulnerável real é desenvolvido, distribuído ou usado contra hardware físico ou de terceiros.
+- A réplica segue o princípio de *responsible disclosure*: usa apenas informações já públicas (relatório da Binarly, CVEs associadas) e não revela novas vulnerabilidades.
 
 ## Resultados
 - Gráficos
@@ -62,7 +70,9 @@ Métricas
 - Multimídia (vídeos, imagens, áudio)
 
 ## Discussão
-Análise com base na literatura utilizada na Introdução.
+A literatura revisada mostra uma preocupação que evolui de alerta teórico para constatação empírica: já em 2013, Bashun et al. [1] apontavam que o UEFI, apesar dos mecanismos de segurança introduzidos, ampliava a superfície de ataque em relação à BIOS; mais de uma década depois, Matrosov e Pagani [6] quantificam essa superfície ao mostrar que um firmware confia, em média, em cerca de 1.500 módulos assinados, qualquer um dos quais pode comprometer a cadeia de confiança. Essa trajetória é reforçada por Surve et al. [2], cuja sistematização de conhecimento mapeia ataques reais e propõe uma taxonomia para o campo, evidenciando que a preocupação inicial de Bashun et al. não só se confirmou como se tornou objeto de um corpo de pesquisa próprio, ainda que, segundo os autores, pouco explorado diante do crescimento dos ataques.
+
+Os casos documentados pela indústria ilustram categorias distintas de ameaça, e essa distinção é relevante para a escolha do foco deste trabalho. O LoJax [3] e o BlackLotus [4] atuam como implante e bootkit, respectivamente, explorando falhas já corrigidas (como a CVE-2022-21894) cujo impacto persiste por ausência de revogação na DBX — a própria NSA [7] observa que o BlackLotus não constitui, em sentido estrito, uma ameaça de firmware, já que atua nas etapas iniciais do boot. O LogoFAIL [5], por sua vez, explora diretamente um parser de imagem do firmware, antes que o Secure Boot possa intervir, o que o torna mais representativo do tipo de vulnerabilidade — na camada de firmware propriamente dita — que este trabalho se propõe a investigar e justifica sua escolha como caso central da demonstração experimental.
 
 ## Conclusão
 Em que medida os objetivos foram alcançados?
