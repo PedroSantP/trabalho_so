@@ -49,11 +49,13 @@ Carregas as configurações no shell atual (não é necessário toda vez)
 
 Compilação propriamente dita
 
-```build \
+```
+build \
     -p OvmfPkg/OvmfPkgX64.dsc \
     -a X64 \
     -t GCC \
-    -b DEBUG```
+    -b DEBUG
+```
 
 O parâmetro -n pode ser incluindo para especificar o número de threads utilizadas.
 Se a compilação terminar sem erros, os artefatos serão encontrados em
@@ -67,12 +69,14 @@ Se a compilação terminar sem erros, os artefatos serão encontrados em
 
 Execute o seguinte comando:
 
-```qemu-system-x86_64 \
+```
+qemu-system-x86_64 \
     -machine q35 \
     -m 2048 \
     -drive if=pflash,format=raw,unit=0,readonly=on,file=Build/OvmfX64/DEBUG_GCC/FV/OVMF_CODE.fd \
     -drive if=pflash,format=raw,unit=1,file=run-ovmf/OVMF_VARS.fd \
-    -net none```
+    -net none
+```
 
 Uma máquina virtual deve inicializar com a OVMF recém-compilada.
 Nos parâmetros, estão especificados 2GB RAM e sem interface de rede.
