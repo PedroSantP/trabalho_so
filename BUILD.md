@@ -12,7 +12,9 @@
 No terminal, instale as dependências a seguir:
 
 ```sudo apt update```
-```sudo apt install -y \
+
+```
+sudo apt install -y \
     build-essential \
     git \
     uuid-dev \
@@ -20,7 +22,8 @@ No terminal, instale as dependências a seguir:
     nasm \
     python3 \
     python-is-python3 \
-    qemu-system-x86```
+    qemu-system-x86
+```
 
 Observação: o QEMU não é necessário para compilar o firmware mas será utilizado para executar a OVMF.
 
