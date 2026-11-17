@@ -33,6 +33,13 @@ No diretório de trabalho, clone o repositório oficial do projeto:
 
 ```git clone --recurse-submodules https://github.com/tianocore/edk2.git```
 
+Observação: no seminário, utilizamos a tag ```edk2-stable202608```
+Para evitar possíveis diferenças no uso, é recomendado selecionar a tag manualmente:
+
+```
+git checkout edk2-stable202608
+```
+
 ## 3 - Compilando as ferramentas do EDK II
 
 Para compilar as ferramentas auxiliares do próprio EDK II, é necessário rodar na raíz do repositório:
