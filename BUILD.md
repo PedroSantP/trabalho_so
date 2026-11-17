@@ -74,7 +74,7 @@ qemu-system-x86_64 \
     -machine q35 \
     -m 2048 \
     -drive if=pflash,format=raw,unit=0,readonly=on,file=Build/OvmfX64/DEBUG_GCC/FV/OVMF_CODE.fd \
-    -drive if=pflash,format=raw,unit=1,file=run-ovmf/OVMF_VARS.fd \
+    -drive if=pflash,format=raw,unit=1,file=Build/OvmfX64/DEBUG_GCC/FV/OVMF_VARS.fd \
     -net none
 ```
 
