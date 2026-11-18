@@ -12,6 +12,7 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 ## Apresentações
 1. Introdução: https://canva.link/477vgbepkuj0uq8
 2. Arquitetura UEFI: https://canva.link/cmhjl7a7nr4lkny
+3. Resultados Preliminares: https://canva.link/yk4cgm7h2msyi5a
 
 ## Resumo
 O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional; no caso do UEFI, que substituiu a BIOS tradicional, essa camada passou a oferecer inicialização modular, serviços de runtime e mecanismos de segurança como o Secure Boot, mas também se tornou alvo de ameaças persistentes por rodar com privilégios elevados antes das proteções do SO. Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot, analisando as interfaces entre firmware e SO (serviços de runtime, variáveis NVRAM e SMM) e demonstrando, em ambiente controlado, uma vulnerabilidade da classe LogoFAIL replicada por meio de engenharia reversa e vulnerability injection, com o objetivo de evidenciar como falhas no firmware permitem contornar o Secure Boot e obter persistência, discutindo-se ainda mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM. A segurança do sistema operacional depende, portanto, da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
@@ -65,14 +66,34 @@ Métricas
 - A réplica segue o princípio de *responsible disclosure*: usa apenas informações já públicas (relatório da Binarly, CVEs associadas) e não revela novas vulnerabilidades.
 
 ## Resultados
-- Gráficos
-- Tabelas
-- Multimídia (vídeos, imagens, áudio)
+A análise teórica e as apresentações permitiram caracterizar a arquitetura UEFI, suas etapas de inicialização, os mecanismos da cadeia de confiança do Secure Boot e as superfícies de ataque associadas ao processamento de dados pelo firmware.
+
+Na investigação técnica, foram realizadas inspeções exploratórias de imagens de firmware com o Ghidra, buscando identificar módulos e componentes relacionados ao processamento de imagens.
+
+No âmbito experimental, foi desenvolvido o protótipo LogoFailDemoDxe, integrado ao EDK II e executado em ambiente OVMF/QEMU. O driver realiza acesso à ESP, leitura de arquivos BMP e conversão por meio da biblioteca BaseBmpSupportLib.
+
+Os testes iniciais processaram com sucesso uma imagem BMP de 2 × 2 pixels, com 70 bytes, gerando um buffer GOP BLT de 16 bytes.
+
+Figura 1 — Execução do LogoFailDemoDxe em OVMF/QEMU.
+
+![log_ovmf](img/log_ovmf.png)
+
+O resultado confirma o funcionamento inicial do fluxo de leitura e processamento de imagens no ambiente experimental. A reprodução da condição de falha e a avaliação de seu impacto permanecem como etapas posteriores.
+
+Os próximos testes contemplam entradas BMP inválidas, avaliação do estado do Secure Boot e verificações de integridade com CHIPSEC.
 
 ## Discussão
 A literatura revisada mostra uma preocupação que evolui de alerta teórico para constatação empírica: já em 2013, Bashun et al. [1] apontavam que o UEFI, apesar dos mecanismos de segurança introduzidos, ampliava a superfície de ataque em relação à BIOS; mais de uma década depois, Matrosov e Pagani [6] quantificam essa superfície ao mostrar que um firmware confia, em média, em cerca de 1.500 módulos assinados, qualquer um dos quais pode comprometer a cadeia de confiança. Essa trajetória é reforçada por Surve et al. [2], cuja sistematização de conhecimento mapeia ataques reais e propõe uma taxonomia para o campo, evidenciando que a preocupação inicial de Bashun et al. não só se confirmou como se tornou objeto de um corpo de pesquisa próprio, ainda que, segundo os autores, pouco explorado diante do crescimento dos ataques.
 
 Os casos documentados pela indústria ilustram categorias distintas de ameaça, e essa distinção é relevante para a escolha do foco deste trabalho. O LoJax [3] e o BlackLotus [4] atuam como implante e bootkit, respectivamente, explorando falhas já corrigidas (como a CVE-2022-21894) cujo impacto persiste por ausência de revogação na DBX — a própria NSA [7] observa que o BlackLotus não constitui, em sentido estrito, uma ameaça de firmware, já que atua nas etapas iniciais do boot. O LogoFAIL [5], por sua vez, explora diretamente um parser de imagem do firmware, antes que o Secure Boot possa intervir, o que o torna mais representativo do tipo de vulnerabilidade — na camada de firmware propriamente dita — que este trabalho se propõe a investigar e justifica sua escolha como caso central da demonstração experimental.
+
+A análise da arquitetura UEFI permitiu relacionar essa classe de vulnerabilidade às etapas de inicialização e aos limites da cadeia de confiança. Em particular, componentes executados durante a fase DXE podem processar arquivos externos antes da transferência de controle ao carregador do sistema operacional. Embora o Secure Boot autentique imagens executáveis conforme as políticas estabelecidas, esse mecanismo não representa uma validação universal de todos os arquivos e dados consumidos pelo firmware. Assim, imagens utilizadas como dados podem constituir uma superfície de ataque distinta daquela coberta pela verificação convencional de assinaturas.
+
+Essa relação entre arquitetura e superfície de ataque orientou a investigação experimental. A inspeção exploratória de imagens de firmware com o Ghidra também contribuiu para a familiarização com a organização dos módulos e a identificação de componentes relacionados ao processamento de imagens. A análise reforçou a relevância de investigar não apenas os executáveis carregados pelo firmware, mas também os dados externos que esses componentes interpretam.
+
+Como referência técnica mais específica para a investigação de imagens BMP, destaca-se a vulnerabilidade CVE-2023-5058, documentada pela Binarly no módulo SystemImageDecoderDxe de firmware Phoenix. A falha envolve escrita fora dos limites durante a decodificação de imagens BMP, associada a um cálculo inadequado do tamanho de memória alocado. Esse caso ilustra como inconsistências entre dimensões declaradas, alocação e processamento de pixels podem comprometer a execução de componentes DXE. A vulnerabilidade CVE-2023-40238, identificada em firmware Insyde, apresenta outro exemplo de corrupção de memória durante a decodificação RLE8 de imagens BMP [8].
+
+Dessa forma, a fundamentação teórica, a análise das superfícies de ataque e os casos documentados pela indústria convergem para o mesmo ponto: o processamento de imagens no firmware representa uma superfície relevante, especialmente quando realizado por componentes privilegiados durante a inicialização. A implementação experimental busca investigar essa relação em ambiente controlado, sem pressupor que o protótipo desenvolvido reproduza integralmente as vulnerabilidades documentadas.
 
 ## Conclusão
 Em que medida os objetivos foram alcançados?
