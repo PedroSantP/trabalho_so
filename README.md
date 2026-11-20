@@ -16,8 +16,12 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 4. Resultados: https://canva.link/6q8h07jktmmsdzu
 
 ## Observação - código fonte
-O código fonte do módulo de demonstração não está disponível em repositório público, por motivos de segurança.
-Entrar em contato caso necessite de permissão.
+**O código-fonte produzido neste trabalho não será disponibilizado publicamente, por questões éticas e de segurança.**
+
+Apesar da demonstração não ser um exploit funcional e ter sido restrita a ambiente controlado, trechos do código implementado podem ser utilizados para fins maliciosos.
+Desta forma, optou-se por não divulgar o código-fonte neste repositório público.
+O código-fonte beaseou-se fortemente nas referências públicas listadas ao final deste documento. Os créditos pela concepção original das ténicas são dos respectivos autores.
+Este trabalho se aplica em contexto acadêmico delimitado. Para esclarecimentos e acesso ao código em contexto de pesquisa ou reprodução controlada, entre em contato com a equipe.
 
 ## Resumo
 O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional; no caso do UEFI, que substituiu a BIOS tradicional, essa camada passou a oferecer inicialização modular, serviços de runtime e mecanismos de segurança como o Secure Boot, mas também se tornou alvo de ameaças persistentes por rodar com privilégios elevados antes das proteções do SO. Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot, analisando as interfaces entre firmware e SO (serviços de runtime, variáveis NVRAM e SMM) e demonstrando, em ambiente controlado, uma vulnerabilidade da classe LogoFAIL replicada por meio de engenharia reversa e vulnerability injection, com o objetivo de evidenciar como falhas no firmware permitem contornar o Secure Boot e obter persistência, discutindo-se ainda mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM. A segurança do sistema operacional depende, portanto, da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
