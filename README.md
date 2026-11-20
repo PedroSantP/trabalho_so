@@ -13,6 +13,7 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 1. Introdução: https://canva.link/477vgbepkuj0uq8
 2. Arquitetura UEFI: https://canva.link/cmhjl7a7nr4lkny
 3. Resultados Preliminares: https://canva.link/yk4cgm7h2msyi5a
+4. Resultados: https://canva.link/6q8h07jktmmsdzu
 
 ## Resumo
 O firmware é o primeiro software executado em um computador e faz a ponte entre o hardware e o sistema operacional; no caso do UEFI, que substituiu a BIOS tradicional, essa camada passou a oferecer inicialização modular, serviços de runtime e mecanismos de segurança como o Secure Boot, mas também se tornou alvo de ameaças persistentes por rodar com privilégios elevados antes das proteções do SO. Este trabalho examina a arquitetura do UEFI e a cadeia de confiança do Secure Boot, analisando as interfaces entre firmware e SO (serviços de runtime, variáveis NVRAM e SMM) e demonstrando, em ambiente controlado, uma vulnerabilidade da classe LogoFAIL replicada por meio de engenharia reversa e vulnerability injection, com o objetivo de evidenciar como falhas no firmware permitem contornar o Secure Boot e obter persistência, discutindo-se ainda mitigações como atualizações de firmware, listas de revogação (DBX) e boot medido com TPM. A segurança do sistema operacional depende, portanto, da integridade do firmware, que deve ser tratado como parte da superfície de ataque.
@@ -66,21 +67,16 @@ Métricas
 - A réplica segue o princípio de *responsible disclosure*: usa apenas informações já públicas (relatório da Binarly, CVEs associadas) e não revela novas vulnerabilidades.
 
 ## Resultados
-A análise teórica e as apresentações permitiram caracterizar a arquitetura UEFI, suas etapas de inicialização, os mecanismos da cadeia de confiança do Secure Boot e as superfícies de ataque associadas ao processamento de dados pelo firmware.
+Durante o desenvolvimento do experimento, foi implementado um módulo para o ambiente UEFI/EDK II, inspirado em pesquisas e demonstrações públicas da Binarly sobre vulnerabilidades em parsers de imagens de firmware, no contexto da família de falhas LogoFAIL. O desenvolvimento consistiu em uma reimplementação experimental de aspectos do comportamento observado nessas pesquisas, com adaptações para o ambiente virtualizado utilizado no seminário.
 
-Na investigação técnica, foram realizadas inspeções exploratórias de imagens de firmware com o Ghidra, buscando identificar módulos e componentes relacionados ao processamento de imagens.
+O módulo permite reproduzir e observar condições relacionadas à falha estudada. Entretanto, por questões de escopo e complexidade de implementação, o desvio de fluxo de execução associado à exploração foi representado por uma chamada a uma função auxiliar dentro do próprio código do módulo. Portanto, essa etapa constitui uma simulação controlada do efeito esperado, e não a reprodução de uma corrupção de memória que, por si só, redirecione a execução para uma rotina arbitrária. Essa simplificação foi adotada para concentrar o desenvolvimento na compreensão dos mecanismos envolvidos e na demonstração dos impactos de segurança, sem comprometer o objetivo didático principal do experimento.
 
-No âmbito experimental, foi desenvolvido o protótipo LogoFailDemoDxe, integrado ao EDK II e executado em ambiente OVMF/QEMU. O driver realiza acesso à ESP, leitura de arquivos BMP e conversão por meio da biblioteca BaseBmpSupportLib.
+Separadamente, foi possível demonstrar, no ambiente experimental, a execução de um binário EFI não assinado mesmo com o Secure Boot indicando estado habilitado. Para isso, foi utilizado o mecanismo de manipulação do ponteiro global gSecurity2, associado ao fluxo de autenticação de imagens UEFI. O resultado evidencia que o estado reportado pelo Secure Boot não garante, isoladamente, que seu mecanismo de validação permaneça íntegro diante do comprometimento da memória e de estruturas internas do firmware.
 
-Os testes iniciais processaram com sucesso uma imagem BMP de 2 × 2 pixels, com 70 bytes, gerando um buffer GOP BLT de 16 bytes.
+É importante ressaltar que o módulo desenvolvido para o seminário não constitui um exploit funcional da vulnerabilidade LogoFAIL, tampouco implementa uma cadeia completa de exploração capaz de reproduzir autonomamente todas as etapas necessárias para obter execução arbitrária de código. Os resultados apresentados correspondem a demonstrações experimentais distintas e controladas: a reprodução de aspectos da falha estudada, com simulação explícita do desvio de fluxo, e a demonstração do impacto que a manipulação de gSecurity2 pode produzir sobre a autenticação de imagens EFI.
 
-Figura 1 — Execução do LogoFailDemoDxe em OVMF/QEMU.
+Por razões de segurança e em alinhamento com princípios de divulgação responsável (Responsible Disclosure), o código-fonte do módulo será disponibilizado de forma limitada, com escopo voltado à análise acadêmica e à reprodução das etapas didáticas do experimento. Detalhes operacionais que permitam reproduzir diretamente mecanismos de exploração ou contornar a autenticação de imagens não serão incluídos na disponibilização pública.
 
-![log_ovmf](img/log_ovmf.png)
-
-O resultado confirma o funcionamento inicial do fluxo de leitura e processamento de imagens no ambiente experimental. A reprodução da condição de falha e a avaliação de seu impacto permanecem como etapas posteriores.
-
-Os próximos testes contemplam entradas BMP inválidas, avaliação do estado do Secure Boot e verificações de integridade com CHIPSEC.
 
 ## Discussão
 A literatura revisada mostra uma preocupação que evolui de alerta teórico para constatação empírica: já em 2013, Bashun et al. [1] apontavam que o UEFI, apesar dos mecanismos de segurança introduzidos, ampliava a superfície de ataque em relação à BIOS; mais de uma década depois, Matrosov e Pagani [6] quantificam essa superfície ao mostrar que um firmware confia, em média, em cerca de 1.500 módulos assinados, qualquer um dos quais pode comprometer a cadeia de confiança. Essa trajetória é reforçada por Surve et al. [2], cuja sistematização de conhecimento mapeia ataques reais e propõe uma taxonomia para o campo, evidenciando que a preocupação inicial de Bashun et al. não só se confirmou como se tornou objeto de um corpo de pesquisa próprio, ainda que, segundo os autores, pouco explorado diante do crescimento dos ataques.
@@ -96,7 +92,13 @@ Como referência técnica mais específica para a investigação de imagens BMP,
 Dessa forma, a fundamentação teórica, a análise das superfícies de ataque e os casos documentados pela indústria convergem para o mesmo ponto: o processamento de imagens no firmware representa uma superfície relevante, especialmente quando realizado por componentes privilegiados durante a inicialização. A implementação experimental busca investigar essa relação em ambiente controlado, sem pressupor que o protótipo desenvolvido reproduza integralmente as vulnerabilidades documentadas.
 
 ## Conclusão
-Em que medida os objetivos foram alcançados?
+Os objetivos do trabalho foram atingidos de forma satisfatória. Foi possível analisar a relação entre firmware UEFI e sistema operacional sob a perspectiva da segurança, abordando a arquitetura de inicialização, a cadeia de confiança do Secure Boot e as principais interfaces entre firmware e sistema operacional.
+
+Na parte experimental, foram testados diferentes cenários, incluindo versões distintas do EDK II, configurações e conjuntos de chaves do Secure Boot. Essa variação permitiu observar como diferenças de implementação e configuração influenciam o comportamento dos mecanismos de segurança, ampliando a análise para além de um único ambiente de teste.
+
+Também foi possível reproduzir aspectos da vulnerabilidade LogoFAIL em ambiente controlado e demonstrar experimentalmente o impacto da manipulação de mecanismos internos de autenticação UEFI, com a execução de um binário EFI não assinado mesmo com o Secure Boot indicando estado habilitado. Embora não tenha sido implementada uma cadeia completa de exploração da LogoFAIL, os experimentos permitiram compreender e demonstrar como o comprometimento do firmware pode afetar proteções que se estendem ao processo de inicialização do sistema operacional.
+
+Por fim, foram discutidas medidas de mitigação, como atualizações de firmware, revogação de imagens por meio da DBX e boot medido com TPM, considerando também suas limitações. Dessa forma, o trabalho alcançou seu objetivo principal: demonstrar que a segurança do sistema operacional depende também da integridade e da confiabilidade das camadas de firmware que antecedem sua inicialização.
 
 ## Referências
 BASHUN, V. et al. Threat Analysis of EFI System Firmware. In: IEEE CONFERENCE ON COMMUNICATIONS AND NETWORK SECURITY (CNS), 2013, Washington, DC. Proceedings... IEEE, 2013.
@@ -112,3 +114,5 @@ BINARLY. LogoFAIL. [S. l.]: Binarly, 2023. Disponível em: https://www.binarly.i
 MATROSOV, A.; PAGANI, F. A Census of Signed UEFI Modules and Attack Taxonomy on Secure Boot. Cybersecurity Research, 2025.
 
 NATIONAL SECURITY AGENCY (NSA). BlackLotus Mitigation Guide. Fort Meade: NSA Cybersecurity Information Sheet, 2023.
+
+THE MALWARE GUARDIAN. Exploitation Technique: UEFI Secure Boot Bypass via gSecurity2 Corruption. GitHub. Disponível em: https://github.com/TheMalwareGuardian/Exploitation-Technique-UEFI-SecureBoot-Bypass-gSecurity2-Corruption. Acesso em: 20 nov. 2026.
