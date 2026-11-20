@@ -123,4 +123,4 @@ MATROSOV, A.; PAGANI, F. A Census of Signed UEFI Modules and Attack Taxonomy on 
 
 NATIONAL SECURITY AGENCY (NSA). BlackLotus Mitigation Guide. Fort Meade: NSA Cybersecurity Information Sheet, 2023.
 
-THE MALWARE GUARDIAN. Exploitation Technique: UEFI Secure Boot Bypass via gSecurity2 Corruption. GitHub. Disponível em: https://github.com/TheMalwareGuardian/Exploitation-Technique-UEFI-SecureBoot-Bypass-gSecurity2-Corruption. Acesso em: 20 nov. 2026.
+THE MALWARE GUARDIAN. Exploitation Technique: UEFI Secure Boot Bypass via gSecurity2 Corruption. GitHub. Disponível em: https://github.com/TheMalwareGuardian/Exploitation-Technique-UEFI-SecureBoot-Bypass-gSecurity2-Corruption.
