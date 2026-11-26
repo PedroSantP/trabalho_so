@@ -1,0 +1,33 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = LogoFailDemoDxe
+  FILE_GUID                      = 7A9E2D41-6B83-4C10-9F52-3A8D6E1B2047
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = LogoFailDemoEntryPoint
+
+[Sources]
+  LogoFailDemoDxe.c
+  BmpMiniParser.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  UefiDriverEntryPoint
+  DebugLib
+  UefiBootServicesTableLib
+  MemoryAllocationLib
+  BmpSupportLib
+  UefiLib
+  UefiRuntimeServicesTableLib
+
+[Guids]
+  gEfiFileInfoGuid
+
+[Protocols]
+  gEfiSimpleFileSystemProtocolGuid
+
+[Depex]
+  gEfiSimpleFileSystemProtocolGuid
