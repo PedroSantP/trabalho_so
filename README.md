@@ -16,7 +16,7 @@ Antes do Sistema Operacional: o Papel do Firmware em Plataformas Atuais
 4. Resultados: https://canva.link/6q8h07jktmmsdzu
 
 ## Código fonte do módulo implementado
-https://github.com/gustavo-terra/logofaildemo
+https://github.com/gustavo-terra/logofaildemo  
 Este repositório será privado após o último checkpoint. Leia o README do repositório.
 
 ## Resumo
