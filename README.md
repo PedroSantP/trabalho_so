@@ -33,15 +33,16 @@ Fundamentos e Superfície de Ataque: Bashun et al. [1] alertaram que o UEFI ampl
 
 Casos Reais: O implante LoJax [3] e o bootkit BlackLotus [4] (que explora a CVE-2022-21894) abusam de binários legítimos vulneráveis ainda não revogados na DBX. Segundo a NSA [7], o BlackLotus atua nas etapas iniciais do boot, não sendo uma falha estrita de firmware. Já o LogoFAIL [5] (documentado pela Binarly) afeta parsers de imagem de grandes fornecedores (AMI, Insyde e Phoenix) em x86 e ARM, permitindo execução de código via imagem maliciosa na partição EFI (ESP) antes da atuação do Secure Boot.
 
-## Objetivos: Analisar a relação de segurança entre firmware UEFI e SO, demonstrando na prática o impacto de falhas nessa camada:
+## Objetivos: 
+Analisar a relação de segurança entre firmware UEFI e SO, demonstrando na prática o impacto de falhas nessa camada:
 
-Descrever a arquitetura UEFI, fases de boot e a cadeia de confiança do Secure Boot (PK, KEK, db, dbx).
+- Descrever a arquitetura UEFI, fases de boot e a cadeia de confiança do Secure Boot (PK, KEK, db, dbx).
 
-Mapear interfaces firmware-SO (serviços de runtime, NVRAM, ACPI e SMM).
+- Mapear interfaces firmware-SO (serviços de runtime, NVRAM, ACPI e SMM).
 
-Reproduzir aspectos da vulnerabilidade LogoFAIL em ambiente controlado.
+- Reproduzir aspectos da vulnerabilidade LogoFAIL em ambiente controlado.
 
-Avaliar mitigações (atualizações, DBX, boot medido com TPM) e suas limitações.
+- Avaliar mitigações (atualizações, DBX, boot medido com TPM) e suas limitações.
 
 ## Metodologia
 
@@ -68,7 +69,7 @@ Quantitativas: Estado do Secure Boot (ativo/contornado) antes e depois; contagem
 ### Limitações e Ética: 
 O ambiente virtualizado simplifica componentes reais (SPI flash, SMM e TPM emulado via swtpm) e baseia-se no EDK II/OVMF, não generalizando automaticamente para AMI, Insyde ou Phoenix. Todos os testes ocorreram em VM isolada, seguindo princípios de responsible disclosure com dados exclusivamente públicos.
 
-### Resultados
+## Resultados
 
 Foi desenvolvido um módulo experimental para UEFI/EDK II inspirado nas pesquisas da Binarly sobre falhas em parsers de imagem (classe LogoFAIL), adaptado ao ambiente virtualizado do seminário:
 
