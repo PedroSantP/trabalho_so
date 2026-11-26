@@ -65,8 +65,10 @@ Qualitativas: Clareza na correlação entre fases do boot, vetores pré-BDS e fa
 
 Quantitativas: Estado do Secure Boot (ativo/contornado) antes e depois; contagem e integridade das chaves (PK, KEK, db, dbx); verificações do CHIPSEC aprovadas/reprovadas; vetores pré-BDS mapeados nas fases PEI e DXE.
 
-### Limitações e Ética: O ambiente virtualizado simplifica componentes reais (SPI flash, SMM e TPM emulado via swtpm) e baseia-se no EDK II/OVMF, não generalizando automaticamente para AMI, Insyde ou Phoenix. Todos os testes ocorreram em VM isolada, seguindo princípios de responsible disclosure com dados exclusivamente públicos.
-Resultados
+### Limitações e Ética: 
+O ambiente virtualizado simplifica componentes reais (SPI flash, SMM e TPM emulado via swtpm) e baseia-se no EDK II/OVMF, não generalizando automaticamente para AMI, Insyde ou Phoenix. Todos os testes ocorreram em VM isolada, seguindo princípios de responsible disclosure com dados exclusivamente públicos.
+
+### Resultados
 
 Foi desenvolvido um módulo experimental para UEFI/EDK II inspirado nas pesquisas da Binarly sobre falhas em parsers de imagem (classe LogoFAIL), adaptado ao ambiente virtualizado do seminário:
 
